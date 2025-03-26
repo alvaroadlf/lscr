@@ -80,6 +80,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ html: processedHtml });
   } catch (error) {
     console.error('Proxy error:', error);
-    return NextResponse.json({ error: `Failed to fetch content: ${error.message}` }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return NextResponse.json({ error: `Failed to fetch content: ${errorMessage}` }, { status: 500 });
   }
 }
