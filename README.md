@@ -101,4 +101,4 @@ MIT License
 
 If you find {lscr} useful and would like to support its development, consider buying me a coffee:
 
-[![Buy Me a Coffee at ko-fi.com](https://storage.ko-fi.com/cdn/kofi5.png?v=6)](https://ko-fi.com/alvaro)
+[![Buy Me a Coffee at ko-fi.com](https://storage.ko-fi.com/cdn/kofi5.png?v=6){width=143 height=63}](https://ko-fi.com/alvaro)
