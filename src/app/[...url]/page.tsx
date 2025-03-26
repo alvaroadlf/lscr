@@ -53,30 +53,41 @@ export default function CleanPage() {
         const response = await fetch(url);
         const html = await response.text();
 
-        // Create a new DOM parser
+        // Crear un DOM parser
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
 
-        // Remove all script tags
-        const scripts = doc.getElementsByTagName('script');
-        while (scripts.length > 0) {
-          scripts[0].parentNode?.removeChild(scripts[0]);
+        // Identificar el contenido principal (reglas específicas para abc.es)
+        let mainContent;
+        if (url.includes('abc.es')) {
+          mainContent = doc.querySelector('.article') || doc.querySelector('.content');
+        } else {
+          mainContent = doc.body; // Fallback para otros sitios
         }
 
-        // Disable all event handlers
-        const allElements = doc.querySelectorAll('*');
-        allElements.forEach(el => {
-          const attrs = el.attributes;
-          for (let i = attrs.length - 1; i >= 0; i--) {
-            const attrName = attrs[i].name;
-            if (attrName.startsWith('on')) {
-              el.removeAttribute(attrName);
-            }
-          }
+        if (!mainContent) {
+          throw new Error('No se pudo identificar el contenido principal');
+        }
+
+        // Clonar el contenido principal para evitar manipular el DOM original
+        const cleanedContent = mainContent.cloneNode(true) as HTMLElement;
+
+        // Eliminar elementos no deseados dentro del contenido principal
+        const unwantedSelectors = [
+          '.paywall', '.ad', '.advertisement', '.subscription', // Clases comunes
+          '#paywall', '#ads', '[data-ad]', '[data-paywall]',    // IDs y atributos comunes
+        ];
+        unwantedSelectors.forEach(selector => {
+          const elements = cleanedContent.querySelectorAll(selector);
+          elements.forEach(el => el.remove());
         });
 
-        // Add the &#123;lscr&#125; banner
-        const banner = doc.createElement('div');
+        // Eliminar scripts y estilos innecesarios
+        const scriptsAndStyles = cleanedContent.querySelectorAll('script, style, link[rel="stylesheet"]');
+        scriptsAndStyles.forEach(el => el.remove());
+
+        // Añadir el banner de &#123;lscr&#125;
+        const banner = document.createElement('div');
         banner.style.position = 'fixed';
         banner.style.bottom = '0';
         banner.style.right = '0';
@@ -93,11 +104,11 @@ export default function CleanPage() {
         banner.style.color = '#854d0e';
         banner.style.boxShadow = '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)';
 
-        const strong = doc.createElement('strong');
+        const strong = document.createElement('strong');
         strong.textContent = 'Website cleaned by &#123;lscr&#125;';
         banner.appendChild(strong);
 
-        const link = doc.createElement('a');
+        const link = document.createElement('a');
         link.href = '/';
         link.textContent = 'Return to Homepage';
         link.style.textDecoration = 'underline';
@@ -105,10 +116,10 @@ export default function CleanPage() {
         link.style.marginLeft = '0.25rem';
         banner.appendChild(link);
 
-        doc.body.appendChild(banner);
+        cleanedContent.appendChild(banner);
 
-        // Convert back to HTML string
-        setContent(doc.documentElement.outerHTML);
+        // Convertir de nuevo a HTML string
+        setContent(cleanedContent.outerHTML);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching content:', err);
