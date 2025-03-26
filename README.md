@@ -102,5 +102,5 @@ MIT License
 If you find {lscr} useful and would like to support its development, consider buying me a coffee:
 
 <figure>
-<a href='https://ko-fi.com/J3J35NRQ' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/alvaro' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 </figure>
