@@ -31,44 +31,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch the original webpage with retries
-    const fetchWithRetries = async (url: string, retries: number = 3): Promise<string> => {
-      for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-          const response = await axios.get(url, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-              'Accept-Language': 'en-US,en;q=0.9',
-              'Cache-Control': 'no-cache',
-              'Pragma': 'no-cache',
-              'Connection': 'keep-alive',
-            },
-            timeout: 10000, // 10 seconds timeout
-          });
-          return response.data;
-        } catch (error) {
-          console.warn(`Attempt ${attempt} failed:`, error.message);
-          if (attempt === retries) throw error;
-        }
-      }
-      throw new Error('Failed to fetch content after retries');
-    };
-
-    const html = await fetchWithRetries(targetUrl);
-
-    const $ = cheerio.load(html);
-
-    // Remove verification messages or overlays
-    const verificationSelectors = [
-      '[id*="verify"]', // IDs containing "verify"
-      '[class*="verify"]', // Classes containing "verify"
-      '[id*="access"]', // IDs containing "access"
-      '[class*="access"]', // Classes containing "access"
-    ];
-    verificationSelectors.forEach(selector => {
-      $(selector).remove();
+    // Fetch the original webpage
+    const response = await axios.get(targetUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Connection': 'keep-alive',
+      },
     });
+
+    const html = response.data;
+    const $ = cheerio.load(html);
 
     // Remove all script tags
     $('script').remove();
