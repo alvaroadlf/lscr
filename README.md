@@ -96,3 +96,9 @@ MIT License
 ## Disclaimer
 
 {lscr} is not intended to violate the terms of service or copyright of other websites. This is merely an open-source service to view webpages without JavaScript enabled.
+
+## Donations
+
+If you find {lscr} useful and would like to support its development, consider buying me a coffee:
+
+[![Buy Me a Coffee at ko-fi.com](https://storage.ko-fi.com/cdn/kofi5.png?v=6)](https://ko-fi.com/alvaro)
