@@ -1,70 +1,96 @@
 # {lscr}
 
-## What is {lscr}?
+{lscr} is an open-source web proxy service that lets you browse the web without distractions like ads, popups, and banners. It's strongly inspired by 12ft.io, but created with the belief that an open source alternative is necessary. The service works by disabling JavaScript on webpages, which removes many modern web annoyances.
 
-{lscr} is an open-source tool designed to help you browse the web without distractions. 
-It's strongly inspired by 12ft.io, but created with the belief that an open source alternative is necessary.
+![{lscr} Screenshot](https://lscr.xyz/images/screenshot.png)
 
-By adding **lscr.xyz/** before any URL, you can remove popups, ads, and other visual clutter.
+## Features
 
-## Why choose {lscr}?
-
-The internet is full of interruptions like ads and popups. {lscr} offers a clean, distraction-free 
-browsing experience, built with transparency and user freedom in mind.
-
-The mission is to make the web more accessible and enjoyable for everyone, without unnecessary barriers.
-
-Many websites load visual distractions through JavaScript after the page renders. {lscr} disables 
-Most visual distractions on webpages are loaded after the page renders via JavaScript.
-
-All {lscr} does is disable the JavaScript of the site.
-
-This doesn't work for all websites, but it works for a surprisingly large proportion of them.
-This is generally the case because most sites want to be indexed by Google and other search engines which have historically not run the JavaScript.
-
-Try it now by adding `lscr.xyz/` before any URL. {lscr} is your open-source solution 
-for a cleaner web experience.
-
-## Open Source
-
-{lscr} is 100% open-source software. The code is freely available for anyone to inspect, modify, and contribute to. 
-This project was created with a belief in transparency and community collaboration.
-
-Unlike similar proprietary tools, {lscr} puts the power in the hands of the community. 
-This project exists because essential web utilities should be open for everyone to understand and improve.
-
-**GitHub Repository:** [github.com/username/lscr](https://github.com/username/lscr)  
-**License:** MIT License  
-**Contributions:** Pull requests, bug reports, and feature suggestions are welcome!
+- **Clean Browsing**: Removes ads, popups, subscription walls, and other distractions from webpages
+- **Easy to Use**: Simply prepend `lscr.xyz/` to any URL or use the web interface
+- **Fast Loading**: Pages load faster without JavaScript overhead
+- **Open Source**: Free to use, modify, and improve
 
 ## How It Works
 
-{lscr} works by disabling JavaScript on the target website. This simple approach is surprisingly effective
-at removing most modern web distractions, which are typically loaded via JavaScript after the initial page render.
+{lscr} works by:
 
-## Installation
+1. Taking a URL you want to view
+2. Fetching the page content server-side
+3. Removing all JavaScript
+4. Serving you a clean, distraction-free version of the page
 
-To use {lscr} as a service, simply add `lscr.xyz/` before any URL you want to visit:
+This approach effectively bypasses many paywalls and popup overlays that rely on JavaScript to enforce restrictions.
+
+## Usage
+
+### Web Interface
+
+1. Visit [lscr.xyz](https://lscr.xyz)
+2. Enter the URL you want to clean in the input field
+3. Click "Clean Webpage"
+
+### Direct URL Method
+
+Simply prepend `lscr.xyz/` to any URL:
 
 ```
-lscr.xyz/https://example.com
+https://lscr.xyz/https://example.com/article
 ```
 
-### Self-hosting
+## Limitations
 
-To self-host {lscr}, follow these steps:
+- Some websites rely heavily on JavaScript for core functionality and may not work correctly
+- Dynamic content loaded after page load will not appear
+- Some interactive elements may not function as expected
 
-1. Clone the repository
-   ```
-   git clone https://github.com/username/lscr.git
-   ```
-2. [Add installation instructions here]
+## Development
 
-## Contributing
+### Prerequisites
 
-Contributions are welcome! Feel free to submit a pull request or open an issue to discuss improvements or report bugs.
+- [Bun](https://bun.sh) (v1.0.0 or higher)
+- Node.js (v18 or higher)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/alvaroadlf/lscr.git
+
+# Navigate to the project directory
+cd lscr
+
+# Install dependencies
+bun install
+
+# Start the development server
+bun run dev
+```
+
+### Building for Production
+
+```bash
+# Create an optimized production build
+bun run build
+
+# Start the production server
+bun run start
+```
+
+## Open Source
+
+{lscr} is 100% open-source software. The code is freely available for anyone to inspect, modify, and contribute to. This project was created with a belief in transparency and community collaboration.
+
+Unlike similar proprietary tools, {lscr} puts the power in the hands of the community. This project exists because essential web utilities should be open for everyone to understand and improve.
+
+**GitHub Repository:** [github.com/alvaroadlf/lscr](https://github.com/alvaroadlf/lscr)  
+**License:** MIT License  
+**Contributions:** Pull requests, bug reports, and feature suggestions are welcome!
+
+## License
+
+MIT License
 
 ## Disclaimer
 
-{lscr} is not intended to violate the terms of service or copyright of other websites.
-This is merely an open-source service to view webpages without JavaScript enabled.
+{lscr} is not intended to violate the terms of service or copyright of other websites. This is merely an open-source service to view webpages without JavaScript enabled.
