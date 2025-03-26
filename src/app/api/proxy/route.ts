@@ -7,14 +7,15 @@ export async function GET(request: NextRequest) {
   try {
     const url = request.nextUrl.searchParams.get('url');
     console.log('Received URL:', url); // Debug log
-    if (!url) {
-      console.log('No URL provided');
+    if (!url || url === '/:path*') { // Verifica si el parámetro es inválido
+      console.log('No URL provided or invalid URL parameter');
       return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
     }
 
-    // Ensure the URL has a valid format and clean duplicate slashes
-    const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
-    const targetUrl = urlPattern.test(url) ? url.replace(/(https?:\/\/)(\/+)/g, '$1') : `https://${url.replace(/\/+/g, '')}`;
+    // Ensure the URL has a valid protocol, default to https:// if missing
+    const urlPattern = /^https?:\/\//i;
+    let targetUrl = urlPattern.test(url) ? url : `https://${url}`;
+    targetUrl = targetUrl.replace(/(https?:\/\/)\/+/g, '$1'); // Clean duplicate slashes
     console.log('Processed targetUrl:', targetUrl);
 
     try {
@@ -80,7 +81,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ html: processedHtml });
   } catch (error) {
     console.error('Proxy error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json({ error: `Failed to fetch content: ${errorMessage}` }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch content' }, { status: 500 });
   }
 }
