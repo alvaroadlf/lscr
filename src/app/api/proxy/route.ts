@@ -56,9 +56,9 @@ export async function GET(request: NextRequest) {
         try {
           const response = await axios.get(url, { headers, timeout: 10000 });
           return response.data;
-        } catch (error) {
-          // Log warning for each failed attempt
-          console.warn(`Attempt ${attempt} failed:`, error.message);
+        } catch (error: unknown) {
+          // Log warning for each failed attempt, casting error as Error
+          console.warn(`Attempt ${attempt} failed:`, (error as Error).message || String(error));
           if (attempt === retries) throw error;
           // Exponential delay between retries
           await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
         $('head').prepend(`<base href="${baseUrl}">`);
       }
 
-      // Add attribution banner (not in Flask, but kept from your original code)
+      // Add attribution banner
       $('body').append(`
         <div style="position: fixed; bottom: 0; right: 0; z-index: 9999; margin: 0 1rem 0 0; padding: 0.5rem 1rem; background-color: #6ee7b7; border: 1px solid #10b981; border-bottom: none; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; font-size: 0.875rem; line-height: 1.25rem; color: #374151; box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);">
           <strong>Website cleaned by <a href="https://lscr.xyz" target="_blank">{lscr}</a></strong>
