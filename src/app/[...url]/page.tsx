@@ -19,21 +19,29 @@ export default function CleanPage() {
       return;
     }
 
+    // Join the URL segments from params
     let segments: string[];
     if (Array.isArray(params.url)) {
       segments = params.url;
     } else {
       segments = [params.url];
     }
+    let fullUrl = segments.join('/');
 
+    // Extract the target URL, handling nested cases
     let url: string;
-    if (segments[0] === 'http:' || segments[0] === 'https:') {
-      url = segments.join('/');
-    } else if (segments[0].startsWith('http')) {
-      url = segments.join('/');
+    const urlPattern = /(https?:\/\/[^/]+(?:\/[^/]+)*)$/i; // Matches the last valid URL in the string
+    const match = fullUrl.match(urlPattern);
+
+    if (match) {
+      url = match[0]; // Take the last valid URL (e.g., https://www.nytimes.com/...)
+    } else if (fullUrl.startsWith('http:') || fullUrl.startsWith('https:')) {
+      url = fullUrl; // Use full URL if it starts with a protocol
     } else {
-      url = `https://${segments.join('/')}`;
+      url = `https://${fullUrl}`; // Add default protocol if no match
     }
+
+    // Clean up duplicate slashes after protocol
     url = url.replace(/(https?:\/\/)\/+/g, '$1');
     setTargetUrl(url);
 
