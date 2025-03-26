@@ -1,6 +1,6 @@
 # {lscr}
 
-{lscr} is an open-source web proxy service that lets you browse the web without distractions like ads, popups, and banners. It's strongly inspired by 12ft.io, but created with the belief that an open source alternative is necessary. The service works by disabling JavaScript on webpages, which removes many modern web annoyances.
+{lscr} (LibreScroll) is an open-source web proxy service that lets you browse the web without distractions like ads, popups, and banners. It's strongly inspired by 12ft.io, but created with the belief that an open source alternative is necessary. The service works by disabling JavaScript on webpages, which removes many modern web annoyances.
 
 ![{lscr} Screenshot](https://raw.githubusercontent.com/alvaroadlf/lscr/refs/heads/main/public/images/screenshot.png)
 
