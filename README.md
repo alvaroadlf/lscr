@@ -61,6 +61,8 @@ git clone https://github.com/alvaroadlf/lscr.git
 cd lscr
 
 # Install dependencies
+npm install -g bun
+
 bun install
 
 # Start the development server
