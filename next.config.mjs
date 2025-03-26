@@ -4,14 +4,14 @@ const nextConfig = {
   // Add rewrites to handle direct URL access
   async rewrites() {
     return [
-      // Redirect URLs like /https:/www.example.com to /proxy?url=https:/www.example.com
+      // Redirect URLs like /https://www.example.com to /proxy?url=https://www.example.com
       {
-        source: '/https//:path*',
-        destination: '/proxy?url=https://:path*', // Remove manual encoding
+        source: '/https://:path*',
+        destination: '/proxy?url=https://:path*',
       },
       {
-        source: '/http//:path*',
-        destination: '/proxy?url=http://:path*', // Remove manual encoding
+        source: '/http://:path*',
+        destination: '/proxy?url=http://:path*',
       },
       // Handle URLs without protocol (e.g., /www.example.com)
       {

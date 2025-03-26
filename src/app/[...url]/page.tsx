@@ -32,8 +32,8 @@ export default function CleanPage() {
     const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
     const url = urlPattern.test(fullUrl) ? fullUrl : `https://${fullUrl}`;
 
-    // Clean up duplicate slashes after protocol
-    const cleanedUrl = url.replace(/(https?:\/\/)\/+/g, '$1');
+    // Do not remove valid slashes in the protocol
+    const cleanedUrl = url.replace(/(https?:\/\/)(\/+)/g, '$1');
     setTargetUrl(cleanedUrl);
 
     const fetchPageContent = async () => {
