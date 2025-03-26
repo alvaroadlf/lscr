@@ -30,12 +30,8 @@ export default function CleanPage() {
 
     // Extract the target URL, handling nested cases
     let url: string;
-    const urlPattern = /(https?:\/\/[^/]+(?:\/[^/]+)*)$/i; // Matches the last valid URL in the string
-    const match = fullUrl.match(urlPattern);
-
-    if (match) {
-      url = match[0]; // Take the last valid URL (e.g., https://www.nytimes.com/...)
-    } else if (fullUrl.startsWith('http:') || fullUrl.startsWith('https:')) {
+    const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
+    if (urlPattern.test(fullUrl)) {
       url = fullUrl; // Use full URL if it starts with a protocol
     } else {
       url = `https://${fullUrl}`; // Add default protocol if no match
@@ -47,16 +43,18 @@ export default function CleanPage() {
 
     const fetchPageContent = async () => {
       try {
+        console.log('Fetching URL:', url); // Debug log
         const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch content from proxy');
+          const errorText = await response.text(); // Obtener detalles del error
+          throw new Error(`Failed to fetch content from proxy: ${response.status} - ${errorText}`);
         }
         const { html } = await response.json();
         setContent(html);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching content:', err);
-        setError('Failed to fetch or process the requested URL');
+        setError(`Failed to fetch or process the requested URL: ${err.message}`);
         setLoading(false);
       }
     };
