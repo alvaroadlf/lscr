@@ -49,7 +49,8 @@ export default function CleanPage() {
         setLoading(false);
       } catch (err) {
         console.error('Error fetching content:', err);
-        setError(`Failed to fetch or process the requested URL: ${err.message}`);
+        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+        setError(`Failed to fetch or process the requested URL: ${errorMessage}`);
         setLoading(false);
       }
     };
