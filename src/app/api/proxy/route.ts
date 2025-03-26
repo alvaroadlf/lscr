@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     // Ensure the URL has a valid format and clean duplicate slashes
     const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
-    const targetUrl = urlPattern.test(url) ? url.replace(/(https?:\/\/)\/+/g, '$1') : `https://${url.replace(/\/+/g, '')}`;
+    const targetUrl = urlPattern.test(url) ? url.replace(/(https?:\/\/)(\/+)/g, '$1') : `https://${url.replace(/\/+/g, '')}`;
     console.log('Processed targetUrl:', targetUrl);
 
     try {
