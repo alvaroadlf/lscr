@@ -12,8 +12,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
     }
 
-    // Clean duplicate slashes and ensure valid URL format
-    let targetUrl = url.replace(/(https?:\/\/)\/+/g, '$1');
+    // Ensure the URL has a valid format and clean duplicate slashes
+    const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
+    const targetUrl = urlPattern.test(url) ? url.replace(/(https?:\/\/)\/+/g, '$1') : `https://${url.replace(/\/+/g, '')}`;
     console.log('Processed targetUrl:', targetUrl);
 
     try {

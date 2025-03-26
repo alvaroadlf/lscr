@@ -7,11 +7,11 @@ const nextConfig = {
       // Redirect URLs like /https:/www.example.com to /proxy?url=https:/www.example.com
       {
         source: '/https/:path*',
-        destination: '/proxy?url=https%3A%2F%2F:path*', // Encode URL to ensure proper handling
+        destination: '/proxy?url=https://:path*', // Remove manual encoding
       },
       {
         source: '/http/:path*',
-        destination: '/proxy?url=http%3A%2F%2F:path*', // Encode URL to ensure proper handling
+        destination: '/proxy?url=http://:path*', // Remove manual encoding
       },
       // Handle URLs without protocol (e.g., /www.example.com)
       {

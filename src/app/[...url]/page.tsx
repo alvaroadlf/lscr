@@ -28,23 +28,18 @@ export default function CleanPage() {
     }
     let fullUrl = segments.join('/');
 
-    // Extract the target URL, handling nested cases
-    let url: string;
+    // Ensure the URL has a valid protocol, but do not add one if it already exists
     const urlPattern = /^https?:\/\//i; // Matches valid protocol prefixes
-    if (urlPattern.test(fullUrl)) {
-      url = fullUrl; // Use full URL if it starts with a protocol
-    } else {
-      url = `https://${fullUrl}`; // Add default protocol if no match
-    }
+    const url = urlPattern.test(fullUrl) ? fullUrl : `https://${fullUrl}`;
 
     // Clean up duplicate slashes after protocol
-    url = url.replace(/(https?:\/\/)\/+/g, '$1');
-    setTargetUrl(url);
+    const cleanedUrl = url.replace(/(https?:\/\/)\/+/g, '$1');
+    setTargetUrl(cleanedUrl);
 
     const fetchPageContent = async () => {
       try {
-        console.log('Fetching URL:', url); // Debug log
-        const response = await fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
+        console.log('Fetching URL:', cleanedUrl); // Debug log
+        const response = await fetch(`/api/proxy?url=${encodeURIComponent(cleanedUrl)}`);
         if (!response.ok) {
           const errorText = await response.text(); // Obtener detalles del error
           throw new Error(`Failed to fetch content from proxy: ${response.status} - ${errorText}`);
