@@ -51,16 +51,46 @@ function ProxyContent() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <div className="bg-emerald-300 rounded-lg p-4 px-6 border flex flex-col items-center">
-        <Link href="/" className="mb-8 inline-block">
-          <Image src="/images/lscr-logo-without-tag.svg" alt="&#123;lscr&#125; Logo" width={120} height={60} />
-        </Link>
-          <h3 className="text-gray-600 text-sm flex items-center">
-            Cleaning Webpage
-            <Image src="/images/spinner-dark.svg" alt="Loading" width={24} height={24} className="ml-2" style={{ fill: '#6ee7b7' }} />
-          </h3>
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        {/* Iframe to display the original page */}
+        {originalUrl && (
+          <iframe
+            src={originalUrl}
+            className="absolute inset-0 w-full h-full"
+            style={{ border: 'none' }}
+          />
+        )}
+        {/* Transparency layer simulating progressive cleaning */}
+        <div
+          className="absolute inset-0 bg-white"
+          style={{
+            opacity: 0.75,
+            animation: 'cleaningEffect 6s linear forwards', // Duration increased to 6 seconds
+          }}
+        />
+        {/* Overlay message */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="bg-emerald-300 rounded-lg p-4 px-6 border flex flex-col items-center">
+            <Link href="/" className="mb-8 inline-block">
+              <Image src="/images/lscr-logo-without-tag.svg" alt="&#123;lscr&#125; Logo" width={120} height={60} />
+            </Link>
+            <h3 className="text-gray-600 text-sm flex items-center">
+              Cleaning Webpage
+              <Image src="/images/spinner-dark.svg" alt="Loading" width={24} height={24} className="ml-2" style={{ fill: '#6ee7b7' }} />
+            </h3>
+          </div>
         </div>
+        {/* CSS animation for the cleaning effect */}
+        <style jsx>{`
+          @keyframes cleaningEffect {
+            from {
+              opacity: 0.75;
+            }
+            to {
+              opacity: 0;
+            }
+          }
+        `}</style>
       </div>
     );
   }
@@ -94,7 +124,7 @@ function ProxyContent() {
 
 export default function ProxyPage() {
   return (
-    <Suspense fallback={<div>Cargando contenido...</div>}>
+    <Suspense fallback={<div>Loading content...</div>}>
       <ProxyContent />
     </Suspense>
   );
