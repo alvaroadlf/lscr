@@ -136,6 +136,16 @@ export default function Home() {
       <footer className="max-w-screen-sm flex flex-col items-center space-y-4 mx-auto py-16 px-4 md:px-6">
         <div className="flex items-center justify-center gap-2 text-zinc-700">
         <a
+              href="https://github.com/alvaroadlf/lscr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              View on GitHub
+            </a>
+        </div>
+        <div className="flex items-center justify-center gap-2 text-zinc-700">
+        <a
               href="mailto:hola@lscr.xyz"
               target="_blank"
               rel="noopener noreferrer"
