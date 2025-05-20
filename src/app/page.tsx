@@ -178,6 +178,23 @@ export default function Home() {
             </a>
           </span>
         </div>
+        <div className="flex items-center justify-center gap-2 text-zinc-700">
+          <span>
+            <a
+              href="https://www.producthunt.com/posts/lscr?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-lscr"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=967461&theme=light&t=1747729716388"
+                alt="{lscr} - Browsing Freedom | Product Hunt"
+                style={{ width: '250px', height: '54px' }}
+                width={250}
+                height={54}
+              />
+            </a>
+          </span>
+        </div>
       </footer>
     </main>
   );
