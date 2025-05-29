@@ -4,19 +4,25 @@ const nextConfig = {
   // Add rewrites to handle direct URL access
   async rewrites() {
     return [
-      // Redirect URLs like /https:/www.example.com to /proxy?url=https:/www.example.com
+      // Redirect URLs like /https://www.example.com to /proxy?url=https://www.example.com
       {
-        source: '/https/:path*',
-        destination: '/proxy?url=:path*', // Do not encode the URL
+        source: '/https//:path*',
+        destination: '/proxy?url=https://:path*',
       },
       {
-        source: '/http/:path*',
-        destination: '/proxy?url=:path*', // Do not encode the URL
+        source: '/http//:path*',
+        destination: '/proxy?url=http://:path*',
       },
-      // Handle URLs without protocol (e.g., /www.example.com)
+      // Handle URLs without protocol (e.g., /example.com)
       {
-        source: '/:url([^/]+\\.[^/]+.*)',
-        destination: '/proxy?url=:url', // Default to http
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: '(?:www\\.)?lscr\\.xyz',
+          },
+        ],
+        destination: '/proxy?url=https://:path*',
       },
     ];
   },
