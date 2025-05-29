@@ -4,28 +4,19 @@ const nextConfig = {
   // Add rewrites to handle direct URL access
   async rewrites() {
     return [
-      // Redirect URLs that start with https:// or https/
-      {
-        source: '/https:/:path*',
-        destination: '/proxy?url=https://:path*',
-      },
+      // Redirect URLs like /https:/www.example.com to /proxy?url=https:/www.example.com
       {
         source: '/https/:path*',
-        destination: '/proxy?url=https://:path*',
-      },
-      // Redirect URLs that start with http:// or http/
-      {
-        source: '/http:/:path*',
-        destination: '/proxy?url=http://:path*',
+        destination: '/proxy?url=:path*', // Do not encode the URL
       },
       {
         source: '/http/:path*',
-        destination: '/proxy?url=http://:path*',
+        destination: '/proxy?url=:path*', // Do not encode the URL
       },
-      // Handle URLs without protocol (e.g., lscr.xyz/example.com)
+      // Handle URLs without protocol (e.g., /www.example.com)
       {
-        source: '/:url((?!proxy|api|_next|favicon.ico|images|icons)[^/]+\\.[^/]+)/:path*',
-        destination: '/proxy?url=https://:url/:path*',
+        source: '/:url([^/]+\\.[^/]+.*)',
+        destination: '/proxy?url=:url', // Default to http
       },
     ];
   },

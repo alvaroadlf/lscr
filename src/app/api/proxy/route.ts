@@ -7,32 +7,15 @@ export async function GET(request: NextRequest) {
   try {
     const url = request.nextUrl.searchParams.get('url');
     console.log('Received URL:', url); // Debug log
-    
-    if (!url || url === '/:path*') {
+    if (!url || url === '/:path*') { // Verifica si el parámetro es inválido
       console.log('No URL provided or invalid URL parameter');
       return NextResponse.json({ error: 'URL parameter is required' }, { status: 400 });
     }
 
-    // Asegurarse de que la URL tenga un protocolo válido y limpiar barras duplicadas
-    let targetUrl = url;
-    if (!targetUrl.match(/^https?:\/\//i)) {
-      targetUrl = `https://${targetUrl}`;
-    }
-    
-    // Limpiar barras duplicadas después del protocolo
-    targetUrl = targetUrl.replace(/(https?:\/\/)\/+/g, '$1');
-    
-    // Asegurarse de que www. esté presente si no hay subdominio
-    try {
-      const parsedUrl = new URL(targetUrl);
-      if (parsedUrl.hostname.split('.').length === 2) {
-        // Si el hostname solo tiene un punto (ejemplo: example.com)
-        targetUrl = targetUrl.replace(parsedUrl.hostname, `www.${parsedUrl.hostname}`);
-      }
-    } catch (error) {
-      console.error('Error parsing URL:', error);
-    }
-
+    // Ensure the URL has a valid protocol, default to https:// if missing
+    const urlPattern = /^https?:\/\//i;
+    let targetUrl = urlPattern.test(url) ? url : `https://${url}`;
+    targetUrl = targetUrl.replace(/(https?:\/\/)\/+/g, '$1'); // Clean duplicate slashes
     console.log('Processed targetUrl:', targetUrl);
 
     try {
