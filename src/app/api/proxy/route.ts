@@ -63,6 +63,24 @@ export async function GET(request: NextRequest) {
     const html = await fetchPage(targetUrl, useGooglebot ? googlebotHeaders : genericHeaders);
     const $ = cheerio.load(html);
 
+    // Añadir script para bloquear alertas y diálogos antes del contenido
+    // Añadir meta tags para cookies y permisos
+    $('head').prepend(`
+      <meta http-equiv="permissions-policy" content="interest-cohort=(), payment=(), camera=(), microphone=()">
+      <meta name="referrer" content="no-referrer">
+    `);
+
+    // Eliminar diálogos y alertas del DOM
+    $('div[class*="cookie"]').remove();
+    $('div[class*="consent"]').remove();
+    $('div[class*="alert"]').remove();
+    $('div[id*="cookie"]').remove();
+    $('div[id*="consent"]').remove();
+    $('div[id*="alert"]').remove();
+    $('div[aria-label*="cookie"]').remove();
+    $('div[role="alert"]').remove();
+    $('[data-cookieconsent]').remove();
+    
     const parsedUrl = new URL(targetUrl);
     let baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}/`;
     if (parsedUrl.pathname && !parsedUrl.pathname.endsWith('/')) {
