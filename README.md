@@ -48,8 +48,8 @@ https://lscr.xyz/https://example.com/article
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (v1.0.0 or higher)
 - Node.js (v18 or higher)
+- npm or yarn
 
 ### Setup
 
@@ -61,22 +61,20 @@ git clone https://github.com/alvaroadlf/lscr.git
 cd lscr
 
 # Install dependencies
-npm install -g bun
-
-bun install
+npm install
 
 # Start the development server
-bun run dev
+npm run dev
 ```
 
 ### Building for Production
 
 ```bash
 # Create an optimized production build
-bun run build
+npm run build
 
 # Start the production server
-bun run start
+npm run start
 ```
 
 ## Open Source

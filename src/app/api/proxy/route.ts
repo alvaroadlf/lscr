@@ -63,14 +63,14 @@ export async function GET(request: NextRequest) {
     const html = await fetchPage(targetUrl, useGooglebot ? googlebotHeaders : genericHeaders);
     const $ = cheerio.load(html);
 
-    // Añadir script para bloquear alertas y diálogos antes del contenido
-    // Añadir meta tags para cookies y permisos
+    // Add script to block alerts and dialogs before content
+    // Add meta tags for cookies and permissions
     $('head').prepend(`
       <meta http-equiv="permissions-policy" content="interest-cohort=(), payment=(), camera=(), microphone=()">
       <meta name="referrer" content="no-referrer">
     `);
 
-    // Eliminar diálogos y alertas del DOM
+    // Remove dialogs and alerts from DOM
     $('div[class*="cookie"]').remove();
     $('div[class*="consent"]').remove();
     $('div[class*="alert"]').remove();
@@ -80,6 +80,50 @@ export async function GET(request: NextRequest) {
     $('div[aria-label*="cookie"]').remove();
     $('div[role="alert"]').remove();
     $('[data-cookieconsent]').remove();
+    
+    // Remove paywall elements - more specific selectors
+    $('div.paywall, .paywall').remove();
+    $('div.subscription-wall, .subscription-wall').remove();
+    $('div.premium-overlay, .premium-overlay').remove();
+    $('div.login-required, .login-required').remove();
+    $('div.register-wall, .register-wall').remove();
+    $('div.signup-modal, .signup-modal').remove();
+    $('div.modal-backdrop, .modal-backdrop').remove();
+    $('div.overlay-mask, .overlay-mask').remove();
+    $('div.popup-container, .popup-container').remove();
+    $('div.banner-adblock, .banner-adblock').remove();
+    $('div.content-wall, .content-wall').remove();
+    $('[data-paywall="true"]').remove();
+    $('[data-subscription="required"]').remove();
+    $('[data-premium="overlay"]').remove();
+    
+    // Remove common paywall classes from Spanish newspapers - more specific
+    $('div.suscripcion-overlay, .suscripcion-overlay').remove();
+    $('div.abono-modal, .abono-modal').remove();
+    $('div.plus-wall, .plus-wall').remove();
+    $('div.pro-banner, .pro-banner').remove();
+    
+    // Remove ABC.es specific paywall elements - more specific
+    $('div.subscriber-only, .subscriber-only').remove();
+    $('div.premium-content-gate, .premium-content-gate').remove();
+    $('[data-testid="paywall-overlay"]').remove();
+    $('[data-testid="subscription-modal"]').remove();
+    
+    // Remove scripts related to paywalls and tracking
+    $('script[src*="paywall"]').remove();
+    $('script[src*="subscription"]').remove();
+    $('script[src*="premium"]').remove();
+    $('script[src*="login"]').remove();
+    $('script[src*="modal"]').remove();
+    $('script[src*="overlay"]').remove();
+    $('script[src*="popup"]').remove();
+    $('script[src*="banner"]').remove();
+    $('script[src*="adblock"]').remove();
+    $('script[src*="wall"]').remove();
+    $('script:contains("paywall")').remove();
+    $('script:contains("subscription")').remove();
+    $('script:contains("premium")').remove();
+    $('script:contains("login")').remove();
     
     const parsedUrl = new URL(targetUrl);
     let baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}/`;

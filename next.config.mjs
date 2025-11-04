@@ -35,7 +35,6 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['*'], // Allow images from any domain
     remotePatterns: [
       {
         protocol: 'https',
