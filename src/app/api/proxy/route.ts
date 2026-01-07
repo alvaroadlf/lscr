@@ -63,6 +63,112 @@ export async function GET(request: NextRequest) {
     const html = await fetchPage(targetUrl, useGooglebot ? googlebotHeaders : genericHeaders);
     const $ = cheerio.load(html);
 
+    // Try to extract content from JSON-LD (NewsArticle or Article)
+    let extractedContent = '';
+    try {
+      $('script[type="application/ld+json"]').each((i, el) => {
+        try {
+          const json = JSON.parse($(el).text() || '{}');
+          // Handle array of objects or single object
+          const items = Array.isArray(json) ? json : [json];
+
+          for (const item of items) {
+            const type = item['@type'];
+            // Check if it's a NewsArticle or Article and has articleBody
+            if (
+              (type === 'NewsArticle' || type === 'Article' || (Array.isArray(type) && (type.includes('NewsArticle') || type.includes('Article')))) &&
+              item.articleBody
+            ) {
+              extractedContent = item.articleBody;
+              return false; // Break loop
+            }
+          }
+        } catch (e) {
+          // Ignore parse errors
+        }
+      });
+    } catch (e) {
+      console.log('Error extracting JSON-LD:', e);
+    }
+
+    // If we extracted content, format it and prepare to inject
+    if (extractedContent) {
+      console.log('Extracted content length:', extractedContent.length);
+
+      // Create a clean container for the extracted content
+      // Use whitespace-pre-line to preserve newlines if they exist, and try to match the site's basic typography
+      // We add 'cuerpo-texto' class if it exists in the site css to reuse styles, otherwise our generic prose
+      const bypassContainer = `
+         <div id="lscr-bypass-content" class="lscr-injected-content max-w-screen-md mx-auto px-4 py-8 bg-white" style="text-align: left !important;">
+           <div class="mb-8 flex items-center justify-center">
+             <span class="inline-flex items-center gap-x-3 rounded-full bg-emerald-50 px-6 py-2.5 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 shadow-md">
+               &nbsp;
+               <span class="animate-pulse text-base">🔓</span>
+               <span>Premium Article Unlocked by <strong>{lscr}</strong></span>
+              &nbsp;
+               </span>
+           </div>
+           <article class="prose lg:prose-xl max-w-none whitespace-pre-line leading-relaxed text-gray-900 font-serif text-lg">
+             ${extractedContent}
+           </article>
+         </div>
+       `;
+
+      // Strategy: Remove potential paywall/content containers
+      // Common content containers
+      $('article, [role="main"], .main-content, .article-body, .entry-content').not(':has(h1)').remove();
+
+      // ABC.es specific cleanup: Remove the "faded" text and paywall overlay
+      // The teaser text usually lives in paragraphs inside .voc-d or .voc-c-container
+      $('.voc-d p').remove();
+      $('div[class*="paywall"]').remove();
+      $('div[class*="subscriber"]').remove();
+      $('div[class*="premium"]').remove();
+      $('section[class*="paywall"]').remove();
+
+      // Smart Injection: Try to find where the content should go
+      let injected = false;
+
+      // 1. ABC.es specific anchor: .voc-d (Author/Date section)
+      // We want to inject AFTER the author/social sharing info, which is inside .voc-d
+      // The author info is typically in 'div.voc-author'
+
+      const authorSection = $('.voc-author').last();
+      if (authorSection.length) {
+        authorSection.after(bypassContainer);
+        injected = true;
+      } else {
+        const abcAnchor = $('.voc-d');
+        if (abcAnchor.length) {
+          abcAnchor.append(bypassContainer);
+          injected = true;
+        }
+      }
+
+      // 2. Generic anchors: After the main heading or header
+      if (!injected) {
+        const header = $('header').first();
+        if (header.length) {
+          header.after(bypassContainer);
+          injected = true;
+        }
+      }
+
+      // 3. Generic anchors: After H1
+      if (!injected) {
+        const h1 = $('h1').first();
+        if (h1.length) {
+          h1.parent().after(bypassContainer); // Try parent first
+          injected = true;
+        }
+      }
+
+      // Fallback: Prepend to body if nothing else matched
+      if (!injected) {
+        $('body').prepend(bypassContainer);
+      }
+    }
+
     // Add script to block alerts and dialogs before content
     // Add meta tags for cookies and permissions
     $('head').prepend(`
@@ -80,7 +186,7 @@ export async function GET(request: NextRequest) {
     $('div[aria-label*="cookie"]').remove();
     $('div[role="alert"]').remove();
     $('[data-cookieconsent]').remove();
-    
+
     // Remove paywall elements - more specific selectors
     $('div.paywall, .paywall').remove();
     $('div.subscription-wall, .subscription-wall').remove();
@@ -96,19 +202,19 @@ export async function GET(request: NextRequest) {
     $('[data-paywall="true"]').remove();
     $('[data-subscription="required"]').remove();
     $('[data-premium="overlay"]').remove();
-    
+
     // Remove common paywall classes from Spanish newspapers - more specific
     $('div.suscripcion-overlay, .suscripcion-overlay').remove();
     $('div.abono-modal, .abono-modal').remove();
     $('div.plus-wall, .plus-wall').remove();
     $('div.pro-banner, .pro-banner').remove();
-    
+
     // Remove ABC.es specific paywall elements - more specific
     $('div.subscriber-only, .subscriber-only').remove();
     $('div.premium-content-gate, .premium-content-gate').remove();
     $('[data-testid="paywall-overlay"]').remove();
     $('[data-testid="subscription-modal"]').remove();
-    
+
     // Remove scripts related to paywalls and tracking
     $('script[src*="paywall"]').remove();
     $('script[src*="subscription"]').remove();
@@ -124,7 +230,7 @@ export async function GET(request: NextRequest) {
     $('script:contains("subscription")').remove();
     $('script:contains("premium")').remove();
     $('script:contains("login")').remove();
-    
+
     const parsedUrl = new URL(targetUrl);
     let baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}/`;
     if (parsedUrl.pathname && !parsedUrl.pathname.endsWith('/')) {
