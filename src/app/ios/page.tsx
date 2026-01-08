@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
+import packageJson from '../../../package.json';
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
           <a href="https://lscr.xyz">
             <Image
               className="px-12 -mb-24 md:-mb-48"
-              src="/images/lscr-logo.svg"
+              src="/images/lscr-logo-without-tag.svg"
               alt="lscr logo"
               width={500}
               height={500}
@@ -125,39 +126,59 @@ export default function Home() {
       </div>
 
       <footer className="max-w-screen-sm flex flex-col items-center space-y-4 mx-auto py-16 px-4 md:px-6">
-        <div className="flex items-center justify-center gap-2 text-zinc-700">
-        <a
-              href="mailto:hola@lscr.xyz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              Say Hello 👋
-            </a>
-        </div>
-        <div className="flex items-center justify-center gap-2 text-zinc-700">
-          <a href='https://ko-fi.com/alvaro' target='_blank'>
-            <Image 
-              height="36" 
-              width="143" 
-              style={{ border: 0, height: '36px' }} 
-              src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' 
-              alt='Buy Me a Coffee at ko-fi.com' 
-            />
+        <div className="flex flex-wrap items-center justify-center gap-2 text-zinc-700 text-sm">
+          <span className="opacity-50">v{packageJson.version}</span>
+          <span className="text-zinc-300">•</span>
+          <a
+            href={`https://github.com/alvaroadlf/lscr/commit/${process.env.NEXT_PUBLIC_COMMIT_SHA}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline opacity-50 hover:opacity-100 transition-opacity"
+          >
+            View changelog
+          </a>
+          <span className="text-zinc-300">•</span>
+          <a
+            href="https://github.com/alvaroadlf/lscr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline opacity-50 hover:opacity-100 transition-opacity"
+          >
+            View project on GitHub
+          </a>
+          <span className="text-zinc-300">•</span>
+          <a
+            href="mailto:hola@lscr.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline opacity-50 hover:opacity-100 transition-opacity"
+          >
+            Say Hello 👋
           </a>
         </div>
-        <div className="flex items-center justify-center gap-2 text-zinc-700">
+        <div className="flex items-center justify-center gap-2 text-zinc-700 text-sm opacity-50">
           <span>
-            &lt;/&gt; with ❤️ in{' '}
+            &copy; {new Date().getFullYear()} &#123;lscr&#125;. &lt;/&gt; with ❤️ in{' '}
             <a
               href="https://www.google.com/maps?q=Pamplona,+Navarra,+Spain"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold hover:underline"
+              className="hover:underline hover:opacity-100 transition-opacity"
             >
               Pamplona
             </a>
           </span>
+        </div>
+        <div className="flex items-center justify-center gap-2 text-zinc-700">
+          <a href='https://ko-fi.com/alvaro' target='_blank'>
+            <Image
+              height="36"
+              width="143"
+              style={{ border: 0, height: '36px' }}
+              src='https://storage.ko-fi.com/cdn/kofi5.png?v=6'
+              alt='Buy Me a Coffee at ko-fi.com'
+            />
+          </a>
         </div>
       </footer>
     </main>

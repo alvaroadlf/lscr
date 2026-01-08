@@ -1,5 +1,10 @@
+import { execSync } from 'child_process';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_COMMIT_SHA: execSync('git rev-parse HEAD').toString().trim(),
+  },
   reactStrictMode: true,
   // Add rewrites to handle direct URL access
   async rewrites() {
