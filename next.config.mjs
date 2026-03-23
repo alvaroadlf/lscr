@@ -1,9 +1,21 @@
 import { execSync } from 'child_process';
 
+const getCommitSha = () => {
+  if (process.env.NEXT_PUBLIC_COMMIT_SHA) {
+    return process.env.NEXT_PUBLIC_COMMIT_SHA;
+  }
+
+  try {
+    return execSync('git rev-parse HEAD').toString().trim();
+  } catch (e) {
+    return 'unknown';
+  }
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    NEXT_PUBLIC_COMMIT_SHA: execSync('git rev-parse HEAD').toString().trim(),
+    NEXT_PUBLIC_COMMIT_SHA: getCommitSha(),
   },
   reactStrictMode: true,
   // Add rewrites to handle direct URL access

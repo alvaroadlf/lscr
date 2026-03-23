@@ -4,11 +4,16 @@
 FROM node:20.9-alpine AS deps
 WORKDIR /app
 
+# git se usa para obtener el SHA en next.config si no viene por variable
+RUN apk add --no-cache git
+
 # Copiar el package lock primero permite cachear la instalación
 COPY package.json package-lock.json ./
 RUN npm ci --silent
 
 FROM node:20.9-alpine AS builder
+WORKDIR /app
+RUN apk add --no-cache git
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
