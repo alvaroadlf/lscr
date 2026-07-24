@@ -1,7 +1,7 @@
 # Dockerfile para Next.js 16 app
 # Optimizado para despliegue en plataformas containerizadas (incluyendo Dokploy)
 
-FROM node:20.9-alpine AS base
+FROM node:22-alpine AS base
 
 # Instalar pnpm globalmente con npm para evitar problemas de corepack en Node 20.9
 RUN npm install -g pnpm@11.9.0
