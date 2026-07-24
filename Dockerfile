@@ -14,8 +14,7 @@ RUN apk add --no-cache git
 
 # Copiar los archivos de dependencias primero permite cachear la instalación
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm config set onlyBuiltDependencies sharp && \
-    pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --frozen-lockfile --prod=false --allow-build=sharp
 
 FROM base AS builder
 WORKDIR /app
