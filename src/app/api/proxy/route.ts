@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
-import axios from 'axios';
 import dns from 'dns/promises';
 
 export async function GET(request: NextRequest) {
@@ -45,11 +44,21 @@ export async function GET(request: NextRequest) {
       'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.6533.119 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     };
 
-    const fetchPage = async (url: string, headers: object, retries: number = 3): Promise<string> => {
+    const fetchPage = async (url: string, headers: HeadersInit, retries: number = 3): Promise<string> => {
       for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-          const response = await axios.get(url, { headers, timeout: 10000 });
-          return response.data;
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          const response = await fetch(url, {
+            headers,
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
+          }
+          return await response.text();
         } catch (error: unknown) {
           console.warn(`Attempt ${attempt} failed:`, (error as Error).message || String(error));
           if (attempt === retries) throw error;

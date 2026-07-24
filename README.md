@@ -48,8 +48,8 @@ https://lscr.xyz/https://example.com/article
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js (v20.9.0 or higher)
+- pnpm (recommended)
 
 ### Setup
 
@@ -61,17 +61,17 @@ git clone https://github.com/alvaroadlf/lscr.git
 cd lscr
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start the development server
-npm run dev
+pnpm dev
 ```
 
 ### Building for Production
 
 ```bash
 # Create an optimized production build
-npm run build
+pnpm build
 
 # Start the production server
 npm run start

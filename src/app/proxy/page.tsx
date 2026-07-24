@@ -4,7 +4,6 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import axios from 'axios';
 
 function ProxyContent() {
   const [loading, setLoading] = useState(true);
@@ -29,14 +28,13 @@ function ProxyContent() {
         setLoading(true);
 
         // Fetch the web page content through our API
-        const response = await axios.get('/api/proxy', {
-          params: { url: targetUrl }
-        });
+        const response = await fetch(`/api/proxy?url=${encodeURIComponent(targetUrl)}`);
+        const data = await response.json();
 
-        if (response.data && response.data.html) {
-          setContent(response.data.html);
+        if (response.ok && data.html) {
+          setContent(data.html);
         } else {
-          setError('Failed to retrieve content');
+          setError(data.error || 'Failed to retrieve content');
         }
       } catch (err) {
         console.error('Error fetching content:', err);
