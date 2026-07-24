@@ -13,8 +13,10 @@ WORKDIR /app
 RUN apk add --no-cache git
 
 # Copiar los archivos de dependencias primero permite cachear la instalación
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile --prod=false
+# --ignore-scripts evita el error ERR_PNPM_IGNORED_BUILDS de pnpm 11 con sharp
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod=false --ignore-scripts && \
+    pnpm rebuild sharp
 
 FROM base AS builder
 WORKDIR /app
