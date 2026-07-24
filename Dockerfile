@@ -3,10 +3,8 @@
 
 FROM node:20.9-alpine AS base
 
-# Instalar pnpm globalmente
-ENV PNPM_HOME=/pnpm
-ENV PATH=$PNPM_HOME:$PATH
-RUN corepack enable && corepack prepare pnpm@11.9.0 --activate
+# Instalar pnpm globalmente con npm para evitar problemas de corepack en Node 20.9
+RUN npm install -g pnpm@11.9.0
 
 FROM base AS deps
 WORKDIR /app
