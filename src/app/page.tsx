@@ -24,8 +24,59 @@ export default function Home() {
     router.push(`/proxy?url=${encodeURIComponent(processedUrl)}`);
   };
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is {lscr}?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '{lscr} (LibreScroll) is a free, open-source tool that lets you browse the web without distractions. Strongly inspired by 12ft.io, it removes popups, ads, banners and paywalls — just add lscr.xyz/ before any URL.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Why choose {lscr}?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The internet is full of interruptions like ads and popups. {lscr} offers a clean, distraction-free browsing experience built with transparency and user freedom in mind, and unlike similar proprietary tools it is 100% free and open source.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does {lscr} work?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Most visual distractions — cookie banners, popups and paywall overlays — are injected by JavaScript after the page renders. {lscr} disables that JavaScript so the distractions never load. It works for a surprisingly large proportion of websites because most sites serve their full content in the initial HTML to be indexed by search engines.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is {lscr} open source?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. {lscr} is 100% open-source software released under the MIT License. The code is freely available for anyone to inspect, modify and contribute to.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is using {lscr} legal?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '{lscr} is not intended to violate the terms of service or copyright of other websites. It is merely an open-source service to view webpages without JavaScript enabled.',
+        },
+      },
+    ],
+  };
+
   return (
     <main className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <header className="max-w-screen-lg mx-auto pt-6 px-4 md:px-6 grid grid-cols-3 items-center">
         <div></div>
         <Link className="text-xl font-medium text-center" href="/">
@@ -44,9 +95,9 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight z-10">
             Browsing Freedom
           </h1>
-          <h3 className="text-xl md:text-3xl font-medium tracking-tight z-10 mt-4">
-            Remove popups, banners, and intrusive ads with ease.
-          </h3>
+          <p className="text-xl md:text-3xl font-medium tracking-tight z-10 mt-4">
+            Remove popups, banners, paywalls, and intrusive ads with ease.
+          </p>
         </div>
       </div>
 
@@ -57,6 +108,10 @@ export default function Home() {
               className="px-4 w-[300px] border border-gray-400 border-r-0"
               placeholder="https://example.com/page..."
               type="text"
+              name="url"
+              inputMode="url"
+              autoComplete="off"
+              aria-label="Webpage URL to clean"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
             />
@@ -102,23 +157,24 @@ export default function Home() {
         <p>
           The mission is to make the web more accessible and enjoyable for everyone, without unnecessary barriers.
         </p>
+
+        <h3>How does &#123;lscr&#125; work?</h3>
         <p>
-          Many websites load visual distractions through JavaScript after the page renders. &#123;lscr&#125; disables
-          Most visual distractions on webpages are loaded after the page renders via JavaScript.
+          Most visual distractions on a webpage &mdash; cookie banners, popups, and paywall overlays &mdash; are
+          injected by JavaScript after the page renders. All &#123;lscr&#125; does is disable that JavaScript, so the
+          distractions never load and you get a clean, readable page.
         </p>
         <p>
-          All &#123;lscr&#125; does is disable the JavaScript of the site.
-        </p>
-        <p>
-          This doesn&apos;t work for all websites, but it works for a surprisingly large proportion of them.
-          This is generally the case because most sites want to be indexed by Google and other search engines which have historically not run the JavaScript.
+          This doesn&apos;t work for every website, but it works for a surprisingly large proportion of them.
+          That&apos;s because most sites want to be indexed by Google and other search engines, which have historically
+          not run JavaScript &mdash; so they serve their full content in the initial HTML.
         </p>
         <p>
           Try it now by adding <code>lscr.xyz/</code> before any URL. &#123;lscr&#125; is your open-source solution
           for a cleaner web experience.
         </p>
 
-        <h3>Open Source</h3>
+        <h3>Is &#123;lscr&#125; open source?</h3>
         <p>
           &#123;lscr&#125; is 100% open-source software. The code is freely available for anyone to inspect, modify, and contribute to.
           This project was created with a belief in transparency and community collaboration.
@@ -127,7 +183,7 @@ export default function Home() {
           Unlike similar proprietary tools, &#123;lscr&#125; puts the power in the hands of the community.
           This project exists because essential web utilities should be open for everyone to understand and improve.
         </p>
-        <h3>Disclaimer</h3>
+        <h3>Is using &#123;lscr&#125; legal?</h3>
         <p>
           &#123;lscr&#125; is not intended to violate the terms of service or copyright of other websites.
           This is merely an open-source service to view webpages without JavaScript enabled.
@@ -192,21 +248,19 @@ export default function Home() {
           </a>
         </div>
         <div className="flex items-center justify-center gap-2 text-zinc-700">
-          <span>
-            <a
-              href="https://www.producthunt.com/posts/lscr?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-lscr"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=967461&theme=light&t=1747729716388"
-                alt="{lscr} - Browsing Freedom | Product Hunt"
-                style={{ width: '250px', height: '54px' }}
-                width={250}
-                height={54}
-              />
-            </a>
-          </span>
+          <a
+            href="https://www.producthunt.com/products/lscr?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-lscr-2"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1060073&theme=light&t=1791029065315"
+              alt="{lscr} - Browsing Freedom | Product Hunt"
+              width={250}
+              height={54}
+              style={{ width: '250px', height: '54px' }}
+            />
+          </a>
         </div>
 
 

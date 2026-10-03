@@ -1,8 +1,38 @@
-'use client';
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import Script from 'next/script';
 import packageJson from '../../../package.json';
+
+const iosDescription =
+  "Install the {lscr} Shortcut on iPhone, iPad and Mac to remove ads, popups and paywalls from any webpage straight from Safari's share menu.";
+
+export const metadata: Metadata = {
+  title: 'iOS & Mac Shortcut',
+  description: iosDescription,
+  alternates: { canonical: '/ios' },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://lscr.xyz/ios',
+    siteName: '{lscr}',
+    title: '{lscr} for iOS & Mac — Browsing Freedom in Safari',
+    description: iosDescription,
+    images: [
+      {
+        url: '/images/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: '{lscr} on iOS & Mac',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '{lscr} for iOS & Mac — Browsing Freedom in Safari',
+    description: iosDescription,
+    images: ['/images/og-image.png'],
+  },
+};
 
 export default function Home() {
   return (
@@ -86,7 +116,14 @@ export default function Home() {
             <div>
               <h3>Step 2: Download the Shortcut</h3>
               <p>
-                <Link href="/ios-shortcut">Click here</Link> to download the shortcut to your iPhone's shortcut app.
+                <a
+                  href="https://www.icloud.com/shortcuts/758c0ae0729448e1a8db6c1cb7cca8e6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Click here
+                </a>{' '}
+                to download the shortcut to your iPhone's shortcut app.
               </p>
             </div>
             <Image
